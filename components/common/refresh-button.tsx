@@ -25,9 +25,7 @@ export function RefreshButton() {
           className="hidden text-muted-foreground xl:inline"
           aria-live="polite"
         >
-          {fetching
-            ? "Updating…"
-            : `Updated ${formatUkTime(dataUpdatedAt)} UK`}
+          {fetching ? "Updating…" : `Updated ${formatUkTime(dataUpdatedAt)} UK`}
         </span>
       ) : null}
       <Button

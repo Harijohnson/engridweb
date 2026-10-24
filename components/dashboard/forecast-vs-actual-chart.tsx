@@ -294,7 +294,9 @@ function ChartBody({
     onWindowChange(clamped === 0 ? null : days[clamped])
   }
   const rangeLabel =
-    span === 1 ? formatUkDay(rows.actual.find((r) => r.day === firstDay)?.t ?? 0) : formatIsoDayRange(firstDay, lastDay)
+    span === 1
+      ? formatUkDay(rows.actual.find((r) => r.day === firstDay)?.t ?? 0)
+      : formatIsoDayRange(firstDay, lastDay)
 
   const pick = (label: unknown) => {
     const t = Number(label)
@@ -408,7 +410,11 @@ function ChartBody({
                 cursor={{ stroke: "var(--muted-foreground)", strokeWidth: 1 }}
                 content={({ active, label }) =>
                   active && label != null ? (
-                    <HourTooltip rows={rows} t={Number(label)} details={details} />
+                    <HourTooltip
+                      rows={rows}
+                      t={Number(label)}
+                      details={details}
+                    />
                   ) : null
                 }
               />
@@ -467,12 +473,20 @@ function ChartBody({
                 axisLine={false}
                 width={56}
               />
-              <ReferenceLine y={0} stroke="var(--foreground)" strokeOpacity={0.4} />
+              <ReferenceLine
+                y={0}
+                stroke="var(--foreground)"
+                strokeOpacity={0.4}
+              />
               <ChartTooltip
                 cursor={{ fill: "var(--muted)", fillOpacity: 0.6 }}
                 content={({ active, label }) =>
                   active && label != null ? (
-                    <HourTooltip rows={rows} t={Number(label)} details={details} />
+                    <HourTooltip
+                      rows={rows}
+                      t={Number(label)}
+                      details={details}
+                    />
                   ) : null
                 }
               />
@@ -606,11 +620,7 @@ function SeriesToggles({
             >
               <span
                 aria-hidden
-                className={cn(
-                  "h-0.5 w-4",
-                  item.swatch,
-                  !shown && "opacity-30"
-                )}
+                className={cn("h-0.5 w-4", item.swatch, !shown && "opacity-30")}
               />
               {item.label}
             </button>
@@ -663,7 +673,11 @@ function HourTooltip({
         value: formatUkDateTime(point.publish_time),
         muted: true,
       },
-      { label: "Hours ahead", value: formatHours(point.lead_time_h), muted: true },
+      {
+        label: "Hours ahead",
+        value: formatHours(point.lead_time_h),
+        muted: true,
+      },
       {
         label: "Buying time (cutoff)",
         value: formatUkDateTime(point.cutoff_time),
@@ -716,7 +730,12 @@ function Overview({
             if (Number.isFinite(t)) onPickDay(ukIsoDay(t))
           }}
         >
-          <XAxis dataKey="t" type="number" domain={["dataMin", "dataMax"]} hide />
+          <XAxis
+            dataKey="t"
+            type="number"
+            domain={["dataMin", "dataMax"]}
+            hide
+          />
           <YAxis hide domain={["auto", "auto"]} />
           {start != null && end != null ? (
             <ReferenceArea

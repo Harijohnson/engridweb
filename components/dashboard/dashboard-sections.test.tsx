@@ -38,7 +38,7 @@ describe("KpiCards: the four data states", () => {
     expect(onRetry).toHaveBeenCalledOnce()
   })
 
-  it("data: signed bias with its meaning, and coverage counts", () => {
+  it("data: main score and coverage up front, other numbers on demand", async () => {
     renderWithProviders(
       <KpiCards
         summary={fixtures.summary}
@@ -47,12 +47,16 @@ describe("KpiCards: the four data states", () => {
         onRetry={() => {}}
       />
     )
+    expect(screen.getByText("744 / 744 hours matched")).toBeTruthy()
+    expect(screen.queryByText("+1,500")).toBeNull()
+    await userEvent.click(
+      screen.getByRole("button", { name: /show other numbers/i })
+    )
     expect(screen.getByText("+1,500")).toBeTruthy()
     expect(screen.getByText(/on average over-forecast/i)).toBeTruthy()
-    expect(screen.getByText("744 / 744 hours matched")).toBeTruthy()
   })
 
-  it("empty (n = 0): dashes and an explanation, never zeros", () => {
+  it("empty (n = 0): dashes and an explanation, never zeros", async () => {
     renderWithProviders(
       <KpiCards
         summary={{ ...fixtures.summary, metrics: fixtures.emptyMetrics }}
@@ -60,6 +64,9 @@ describe("KpiCards: the four data states", () => {
         error={null}
         onRetry={() => {}}
       />
+    )
+    await userEvent.click(
+      screen.getByRole("button", { name: /show other numbers/i })
     )
     expect(screen.getAllByText("–").length).toBeGreaterThanOrEqual(5)
     expect(screen.getAllByText(/no matched hours/i).length).toBeGreaterThan(0)
@@ -147,6 +154,8 @@ describe("IntervalTable", () => {
         ordering={ordering}
         onOrderingChange={onOrderingChange}
         onPageChange={() => {}}
+        pageSize={24}
+        onPageSizeChange={() => {}}
         selectedHour={null}
         onSelectHour={() => {}}
       />
@@ -179,8 +188,10 @@ describe("IntervalTable", () => {
 describe("Dashboard (through MSW)", () => {
   it("loads every section from the API", async () => {
     renderWithProviders(<Dashboard />)
-    expect(await screen.findByText("+1,500")).toBeTruthy()
-    expect(await screen.findByText("Interval table")).toBeTruthy()
+    expect(await screen.findByText("744 / 744 hours matched")).toBeTruthy()
+    expect(
+      await screen.findByRole("heading", { name: "Hour-by-hour table" })
+    ).toBeTruthy()
     expect(await screen.findByText(/744\/744 forecast hours/)).toBeTruthy()
   })
 

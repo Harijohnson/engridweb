@@ -169,24 +169,17 @@ export function ChartSkeleton({
   )
 }
 
-/** Six tile-shaped placeholders matching the KPI cards. */
+/** A placeholder the size of the headline score card. */
 export function KpiSkeleton({ label }: { label: string }) {
   return (
     <div
-      className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6"
+      className="flex h-52 flex-col gap-3 rounded-2xl bg-muted/40 p-6 sm:p-8"
       role="status"
       aria-label={label}
     >
-      {Array.from({ length: 6 }, (_, i) => (
-        <div
-          key={i}
-          className="flex h-26 flex-col gap-2.5 bg-card p-3 ring-1 ring-foreground/10"
-        >
-          <Skeleton className="h-3 w-20" />
-          <Skeleton className="h-6 w-24" />
-          <Skeleton className="h-3 w-28" />
-        </div>
-      ))}
+      <Skeleton className="h-4 w-24" />
+      <Skeleton className="h-16 w-48" />
+      <Skeleton className="h-4 w-72 max-w-full" />
     </div>
   )
 }

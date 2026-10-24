@@ -52,10 +52,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import type { Schemas } from "@/lib/api/client"
-import {
-  isIntervalOrdering,
-  PAGE_SIZES,
-} from "@/hooks/use-dashboard-params"
+import { isIntervalOrdering, PAGE_SIZES } from "@/hooks/use-dashboard-params"
 import type { IntervalOrdering } from "@/lib/api/query-keys"
 import {
   describeError,

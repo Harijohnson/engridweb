@@ -16,8 +16,12 @@ import {
   EmptyState,
   ErrorState,
 } from "@/components/common/data-states"
-import { SectionShell } from "@/components/common/section-shell"
+import {
+  SectionShell,
+  type SectionSource,
+} from "@/components/common/section-shell"
 import { ChartTooltipCard } from "@/components/dashboard/chart-tooltip-card"
+import { describeGate } from "@/components/dashboard/view-summary"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -44,8 +48,7 @@ import {
 type History = Schemas["HistoryResponse"]
 type VersionStatus = Schemas["VersionStatusEnum"]
 
-/** The worked example from PLAN.md §2.4, offered as a shortcut (it is not data). */
-export const WORKED_EXAMPLE_HOUR = "2026-01-15T18:00:00Z"
+export { WORKED_EXAMPLE_HOUR } from "@/lib/worked-example"
 
 export const STATUS_LABEL: Record<VersionStatus, string> = {
   selected: "Selected",
@@ -128,6 +131,8 @@ export function PublicationHistory({
   hour,
   data,
   isLoading,
+  updating = false,
+  source,
   error,
   onRetry,
   onPickExample,
@@ -135,6 +140,8 @@ export function PublicationHistory({
   hour: string | null
   data: History | undefined
   isLoading: boolean
+  updating?: boolean
+  source?: SectionSource | null
   error: unknown
   onRetry: () => void
   onPickExample: () => void
@@ -157,12 +164,18 @@ export function PublicationHistory({
     <SectionShell
       id="publication-history"
       title={title}
-      description={`Every forecast version for one delivery hour, and why only one was usable.${hour ? ` ${ukZoneLabel(hour)}.` : ""}`}
+      help={{
+        text: "Forecasts for one hour are published many times. Only versions published before your buying time count; the newest of those is the one used (Selected). Later versions are shown, but never used.",
+        guideAnchor: "how-a-forecast-is-chosen",
+      }}
+      updating={updating}
+      source={hour ? source : null}
+      description={`Every forecast published for one delivery hour, and why only one could be used.${hour ? ` ${ukZoneLabel(hour)}.` : ""}`}
     >
       {!hour ? (
         <EmptyState title="Pick a delivery hour">
           <p>
-            Click a point on the forecast chart or a row in the interval table.
+            Click the chart or a row in the hour-by-hour table to inspect it.
           </p>
           <Button
             variant="outline"
@@ -212,15 +225,17 @@ function HistoryBody({
   const cutoffMs = Date.parse(data.cutoff_time)
   const policy = data.query
   const policyText =
-    policy.policy === "daily_gate"
-      ? `Daily gate: D-${policy.gate_days_before} at ${policy.gate_time} UK`
-      : `Lead time: ${policy.lead_time_h} h before delivery`
+    policy.policy === "lead_time"
+      ? `${policy.lead_time_h} h before delivery`
+      : policy.gate_time != null && policy.gate_days_before != null
+        ? `Buying ${describeGate(policy.gate_time, policy.gate_days_before)}`
+        : ""
 
   return (
     <div className="flex flex-col gap-3">
       <dl className="grid grid-cols-2 gap-x-4 gap-y-1 sm:grid-cols-4">
         <div>
-          <dt className="text-muted-foreground">Cutoff</dt>
+          <dt className="text-muted-foreground">Buying time (cutoff)</dt>
           <dd>{formatUkDateTime(data.cutoff_time)}</dd>
           <dd className="text-muted-foreground">{policyText}</dd>
         </div>
@@ -282,7 +297,7 @@ function HistoryBody({
             stroke="var(--foreground)"
             strokeOpacity={0.6}
             label={{
-              value: "Cutoff",
+              value: "Buying time",
               position: "top",
               className: "fill-foreground text-[10px]",
             }}
@@ -322,7 +337,7 @@ function HistoryBody({
                   rows={[
                     { label: "Forecast", value: formatMw(point.forecast_mw) },
                     {
-                      label: "Lead time",
+                      label: "Hours ahead",
                       value: formatHours(point.lead_time_h),
                     },
                     { label: "Status", value: STATUS_LABEL[point.status] },
@@ -363,7 +378,7 @@ function HistoryBody({
                 Forecast
               </th>
               <th scope="col" className="px-2 py-1.5 text-right font-medium">
-                Lead time
+                Hours ahead
               </th>
               <th scope="col" className="px-2 py-1.5 font-medium">
                 Status

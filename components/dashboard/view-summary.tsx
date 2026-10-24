@@ -6,8 +6,7 @@ type Metrics = Schemas["MetricSummary"]
 
 /** "at 10:00 UK the day before" for a daily gate (PLAN.md D22 wording). */
 export function describeGate(gateTime: string, daysBefore: number): string {
-  const day =
-    daysBefore === 1 ? "the day before" : `${daysBefore} days before`
+  const day = daysBefore === 1 ? "the day before" : `${daysBefore} days before`
   return `at ${gateTime} UK ${day}`
 }
 
@@ -35,8 +34,8 @@ export function ViewSummary({
       </strong>
       .{" "}
       <span className="whitespace-nowrap">
-        {formatNumber(metrics.n_matched)} of{" "}
-        {formatNumber(metrics.n_expected)} hours matched.
+        {formatNumber(metrics.n_matched)} of {formatNumber(metrics.n_expected)}{" "}
+        hours matched.
       </span>
     </>
   )

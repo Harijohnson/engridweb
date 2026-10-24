@@ -33,7 +33,10 @@ function requestInit({
   client,
   queryKey,
   signal,
-}: QueryFunctionContext<QueryKey>): { signal: AbortSignal; cache: RequestCache } {
+}: QueryFunctionContext<QueryKey>): {
+  signal: AbortSignal
+  cache: RequestCache
+} {
   const invalidated = client.getQueryState(queryKey)?.isInvalidated ?? false
   return { signal, cache: invalidated ? "no-cache" : "default" }
 }

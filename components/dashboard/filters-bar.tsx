@@ -139,7 +139,11 @@ function activeChips(meta: Meta, state: DashboardState): Chip[] {
       label: `Buying ${lead} h ahead`,
       clear: { policy: null, lead: null },
     })
-  } else if (state.gate || state.days != null || policy !== meta.policies.default) {
+  } else if (
+    state.gate ||
+    state.days != null ||
+    policy !== meta.policies.default
+  ) {
     const gate = meta.policies.daily_gate
     chips.push({
       key: "gate",
@@ -208,10 +212,7 @@ export function FiltersBar({
             <SlidersHorizontalIcon data-icon="inline-start" aria-hidden />
             Filters{chips.length ? ` (${chips.length})` : ""}
           </SheetTrigger>
-          <SheetContent
-            side="bottom"
-            className="max-h-[85vh] overflow-y-auto"
-          >
+          <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto">
             <SheetHeader>
               <SheetTitle>Filters</SheetTitle>
               <SheetDescription>
@@ -221,7 +222,11 @@ export function FiltersBar({
             <div className="px-4 pb-6">{controls}</div>
           </SheetContent>
         </Sheet>
-        <ActiveChips chips={chips} onChange={update} onReset={() => setState(null)} />
+        <ActiveChips
+          chips={chips}
+          onChange={update}
+          onReset={() => setState(null)}
+        />
       </div>
 
       <div
@@ -614,11 +619,7 @@ function LeadTimeControl({
         <span className="text-xs font-semibold" id="lead-label">
           How far ahead?
         </span>
-        <output
-          className="text-xs"
-          htmlFor="lead-slider"
-          aria-live="polite"
-        >
+        <output className="text-xs" htmlFor="lead-slider" aria-live="polite">
           Buy{" "}
           <strong className="font-mono text-sm tabular-nums">{shown} h</strong>{" "}
           before each hour
@@ -669,4 +670,3 @@ function LeadTimeControl({
     </div>
   )
 }
-

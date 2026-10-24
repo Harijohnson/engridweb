@@ -15,7 +15,10 @@ import {
 } from "recharts"
 
 import { ChartSkeleton, ErrorState } from "@/components/common/data-states"
-import { SectionShell } from "@/components/common/section-shell"
+import {
+  SectionShell,
+  type SectionSource,
+} from "@/components/common/section-shell"
 import { ChartTooltipCard } from "@/components/dashboard/chart-tooltip-card"
 import { Button } from "@/components/ui/button"
 import {
@@ -100,7 +103,7 @@ function metricRows(row: Row) {
 }
 
 const VIEW_LABEL: Record<BreakdownView, string> = {
-  lead_time: "By lead time",
+  lead_time: "By hours ahead",
   hour_of_day: "By hour of day",
   day: "By day",
 }
@@ -111,6 +114,8 @@ export function AccuracyBreakdown({
   curve,
   breakdown,
   isLoading,
+  updating = false,
+  source,
   error,
   onRetry,
   activeLeadTimeH,
@@ -120,6 +125,8 @@ export function AccuracyBreakdown({
   curve: Curve | undefined
   breakdown: Breakdown | undefined
   isLoading: boolean
+  updating?: boolean
+  source?: SectionSource | null
   error: unknown
   onRetry: () => void
   activeLeadTimeH: number | null
@@ -149,10 +156,16 @@ export function AccuracyBreakdown({
     <SectionShell
       id="accuracy"
       title="Accuracy breakdown"
+      help={{
+        text: "By hours ahead: how much the error shrinks when you buy closer to delivery. By hour of day / by day: when the forecast you bought on was most and least accurate.",
+        guideAnchor: "reading-accuracy",
+      }}
+      updating={updating}
+      source={source}
       description={
         view === "lead_time"
-          ? "How the error changes with the required lead time H (cutoff = delivery − H). Uses the selected date range."
-          : "Error of the selected policy, grouped by UK hour of day or UK delivery day."
+          ? "How the error changes with how many hours ahead you buy. Uses the selected dates."
+          : "Error of the forecast you bought on, grouped by UK hour of day or UK delivery day."
       }
       action={
         <Button
@@ -254,10 +267,10 @@ function LeadTimeChart({
           {activeLeadTimeH != null ? (
             <ReferenceLine
               x={activeLeadTimeH}
-              stroke="var(--foreground)"
-              strokeOpacity={0.5}
+              stroke="var(--highlight)"
+              strokeWidth={2}
               label={{
-                value: "Current",
+                value: "Your setting",
                 position: "insideTopLeft",
                 className: "fill-foreground text-[10px]",
               }}
@@ -271,7 +284,7 @@ function LeadTimeChart({
               if (!active || !row) return null
               return (
                 <ChartTooltipCard
-                  title={`Required lead time ${row.label}`}
+                  title={`Buying ${row.label} ahead`}
                   rows={metricRows(row)}
                 />
               )
@@ -293,8 +306,8 @@ function LeadTimeChart({
         </LineChart>
       </ChartContainer>
       <figcaption className="text-muted-foreground">
-        Shorter lead times allow newer forecasts, so the error usually falls as
-        H shrinks. Bias above zero means over-forecasting.
+        Buying closer to delivery allows newer forecasts, so the error usually
+        falls as the hours ahead shrink. Bias above zero means over-forecasting.
         {gapStart
           ? ` Shaded: from ${gapStart.x} h some delivery hours have no forecast old enough (${last.metrics.n_missing_forecast} of ${last.metrics.n_expected} at ${last.x} h); they are excluded, not filled in.`
           : ""}

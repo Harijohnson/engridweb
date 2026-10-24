@@ -1,4 +1,5 @@
 import { InfoIcon } from "lucide-react"
+import Link from "next/link"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import type { Schemas } from "@/lib/api/client"
@@ -10,29 +11,33 @@ export function Methodology({ meta }: { meta: Meta | undefined }) {
     <section
       id="methodology"
       aria-labelledby="methodology-title"
-      className="flex scroll-mt-4 flex-col gap-3 border bg-card p-4"
+      className="flex scroll-mt-28 flex-col gap-3 border bg-card p-4"
     >
       <h2 id="methodology-title" className="text-sm font-medium">
-        How this works
+        How this works and its limits
       </h2>
       <div className="grid gap-4 text-muted-foreground md:grid-cols-3">
         <div className="flex flex-col gap-1">
-          <h3 className="font-medium text-foreground">1. Decision cutoff</h3>
+          <h3 className="font-medium text-foreground">1. Your buying time</h3>
           <p>
-            <strong className="font-medium text-foreground">Daily gate</strong>:
-            a fixed deadline, for example the day before delivery at 10:00 UK
-            time.{" "}
-            <strong className="font-medium text-foreground">Lead time</strong>:
-            the forecast must be at least H hours old when the hour starts.
+            <strong className="font-medium text-foreground">
+              At a fixed time each day
+            </strong>{" "}
+            (a daily gate): for example 10:00 UK the day before delivery.{" "}
+            <strong className="font-medium text-foreground">
+              A set number of hours ahead
+            </strong>{" "}
+            (a lead time): the forecast must be published at least H hours
+            before the hour starts.
           </p>
         </div>
         <div className="flex flex-col gap-1">
-          <h3 className="font-medium text-foreground">2. No look-ahead</h3>
+          <h3 className="font-medium text-foreground">2. No hindsight</h3>
           <p>
-            For every delivery hour, the selected forecast is the newest version
-            published at or before the cutoff. Later versions are shown in the
-            publication history but never used. Hours without an eligible
-            version are counted as missing, not filled in.
+            For every delivery hour, the forecast used is the newest one
+            published at or before the buying time. Later versions are shown in
+            the publication history but never used. Hours with no forecast in
+            time are counted as missing, not filled in.
           </p>
         </div>
         <div className="flex flex-col gap-1">
@@ -75,6 +80,16 @@ export function Methodology({ meta }: { meta: Meta | undefined }) {
           procurement volumes: demand data is not part of the supplied datasets.
         </AlertDescription>
       </Alert>
+      <p className="text-muted-foreground">
+        More detail, a glossary and a worked example are in the{" "}
+        <Link
+          href="/guide"
+          className="font-medium text-primary underline-offset-4 hover:underline"
+        >
+          user guide
+        </Link>
+        .
+      </p>
     </section>
   )
 }

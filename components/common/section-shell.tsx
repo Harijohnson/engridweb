@@ -81,10 +81,7 @@ export function SectionShell({
           {action ? <CardAction>{action}</CardAction> : null}
         </CardHeader>
         <CardContent
-          className={cn(
-            "min-w-0 transition-opacity",
-            updating && "opacity-60"
-          )}
+          className={cn("min-w-0 transition-opacity", updating && "opacity-60")}
         >
           {children}
         </CardContent>
