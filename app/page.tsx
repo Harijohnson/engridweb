@@ -1,14 +1,14 @@
 import { Suspense } from "react"
 
-import { Dashboard } from "@/components/dashboard/dashboard"
-import DashboardLoading from "@/app/loading"
+import HomeLoading from "@/app/loading"
+import { SimpleHome } from "@/components/home/simple-home"
 
 export default function Page() {
-  // The dashboard reads its filters from the URL (nuqs / useSearchParams), which
-  // needs a Suspense boundary for static rendering.
+  // The page reads its filters from the URL (nuqs / useSearchParams), which needs a
+  // Suspense boundary for static rendering.
   return (
-    <Suspense fallback={<DashboardLoading />}>
-      <Dashboard />
+    <Suspense fallback={<HomeLoading />}>
+      <SimpleHome />
     </Suspense>
   )
 }

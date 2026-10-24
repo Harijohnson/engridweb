@@ -2,6 +2,7 @@
 
 import {
   createParser,
+  createSerializer,
   parseAsInteger,
   parseAsNumberLiteral,
   parseAsStringLiteral,
@@ -110,6 +111,10 @@ const dashboardParsers = {
   chart: parseAsStringLiteral(CHART_VIEWS),
   size: parseAsNumberLiteral(PAGE_SIZES),
 }
+
+/** A link to another page with the same view, e.g. serializeDashboard("/details", state)
+ * (PLAN.md D30: the home and details pages share their URL state). */
+export const serializeDashboard = createSerializer(dashboardParsers)
 
 export function useDashboardParams() {
   return useQueryStates(dashboardParsers, { history: "replace" })

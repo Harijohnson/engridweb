@@ -102,11 +102,11 @@ const GLOSSARY: { term: string; also?: string; meaning: string }[] = [
 const CHECKLIST: { title: string; body: React.ReactNode }[] = [
   {
     title: "The data badge says “Complete data”",
-    body: "Under the dashboard title. If it turns orange (“Some data missing”), some forecasts or actuals were not loaded.",
+    body: "At the top of the Details page. If it turns orange (“Some data missing”), some forecasts or actuals were not loaded.",
   },
   {
     title: "“Hours compared” covers your dates",
-    body: "The key numbers show “matched / expected hours”. If not all hours are matched, a warning says how many are missing and why.",
+    body: "The home page shows “Hours checked”, the Details page “matched / expected hours”. If not all hours are matched, both say how many are missing and why.",
   },
   {
     title: "No “Partial coverage” warning, or you understand it",
@@ -342,6 +342,26 @@ export function UserGuide() {
       </GuideSection>
 
       <GuideSection id="reading-the-dashboard" title="Reading the dashboard">
+        <p>
+          The{" "}
+          <Link
+            href="/"
+            className="text-primary underline-offset-4 hover:underline"
+          >
+            home page
+          </Link>{" "}
+          gives the short answer in plain words: how far off the prediction
+          usually was, whether it guessed too high or too low, how many hours
+          were checked, and one chart. Pick when you buy with the chips at the
+          top. Everything below is on the{" "}
+          <Link
+            href="/details"
+            className="text-primary underline-offset-4 hover:underline"
+          >
+            Details page
+          </Link>
+          .
+        </p>
         <div className="grid gap-3">
           {SECTIONS_GUIDE.map((s) => (
             <article

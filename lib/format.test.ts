@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import {
   describeError,
+  formatClock12,
   formatHours,
   formatIsoDay,
   formatIsoDayRange,
@@ -96,5 +97,15 @@ describe("UK calendar days (chart zoom, date presets)", () => {
     expect(formatIsoDayRange("2026-01-29", "2026-02-04")).toBe(
       "29 Jan – 4 Feb 2026"
     )
+  })
+})
+
+describe("formatClock12", () => {
+  it("writes a wall-clock time the way people say it", () => {
+    expect(formatClock12("10:00")).toBe("10am")
+    expect(formatClock12("10:30")).toBe("10:30am")
+    expect(formatClock12("12:00")).toBe("12pm")
+    expect(formatClock12("00:00")).toBe("12am")
+    expect(formatClock12("17:05")).toBe("5:05pm")
   })
 })
