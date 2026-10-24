@@ -1,9 +1,38 @@
 import { expect, test } from "@playwright/test"
 
-test("dashboard smoke: load, switch policy, slide, inspect an hour, sort", async ({
+test("home page: plain answer, buying-time chips, link to details", async ({
   page,
 }) => {
   await page.goto("/")
+
+  // Real data through the /api rewrite: every January hour is checked.
+  await expect(page.getByText("The short answer")).toBeVisible()
+  const numbers = page.getByLabel("The answer in numbers")
+  await expect(numbers.getByText("744 of 744")).toBeVisible()
+
+  // Buying two days ahead leaves hours with no prediction in time; they are counted.
+  const chips = page.getByRole("group", { name: "When do you buy?" })
+  await chips.getByRole("button", { name: "2 days before" }).click()
+  await expect(page).toHaveURL(/policy=lead_time/)
+  await expect(page).toHaveURL(/lead=48/)
+  await expect(
+    numbers.getByText(/155 hours had no prediction in time/)
+  ).toBeVisible()
+
+  // The chart moves a week at a time.
+  await page.getByRole("button", { name: "Next week" }).click()
+  await expect(page).toHaveURL(/win=2026-01-08/)
+
+  // Details keeps the same view.
+  await page.getByRole("link", { name: /See the details/ }).click()
+  await expect(page).toHaveURL(/\/details\?.*lead=48/)
+  await expect(page.getByText("Partial coverage")).toBeVisible()
+})
+
+test("details smoke: load, switch policy, slide, inspect an hour, sort", async ({
+  page,
+}) => {
+  await page.goto("/details")
 
   // Loads real data through the /api rewrite; coverage is complete for January.
   await expect(page.getByText(/744\/744 forecast hours/)).toBeVisible()
