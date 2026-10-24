@@ -106,7 +106,7 @@ type ForecastRow = {
 
 /** Chart rows from the API response. Display-only: values are passed through, and the
  * error is the API's own error_mw. */
-function buildRows(data: Timeseries) {
+export function buildRows(data: Timeseries) {
   const actual: ActualRow[] = data.actual.map((p) => ({
     t: Date.parse(p.start_time),
     day: ukIsoDay(p.start_time),
@@ -127,15 +127,15 @@ function buildRows(data: Timeseries) {
   return { actual, forecast, byHour, actualAt, days }
 }
 
-type Rows = ReturnType<typeof buildRows>
+export type Rows = ReturnType<typeof buildRows>
 
-function floorToHour(ms: number): number {
+export function floorToHour(ms: number): number {
   return ms - (ms % HOUR_MS)
 }
 
 /** Axis ticks from the visible data: UK midnights for multi-day views, every 3 hours
  * for a single day. */
-function ticksFor(forecast: ForecastRow[], dayCount: number): number[] {
+export function ticksFor(forecast: ForecastRow[], dayCount: number): number[] {
   if (dayCount > 1) {
     const midnights = forecast.filter((r) => formatUkTime(r.t) === "00:00")
     const step = Math.ceil(midnights.length / 12)
@@ -550,7 +550,13 @@ function ChartBody({
   )
 }
 
-function TimeAxis({ ticks, multiDay }: { ticks: number[]; multiDay: boolean }) {
+export function TimeAxis({
+  ticks,
+  multiDay,
+}: {
+  ticks: number[]
+  multiDay: boolean
+}) {
   return (
     <XAxis
       dataKey="t"

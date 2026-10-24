@@ -1,4 +1,4 @@
-import { BookOpenIcon, LayoutDashboardIcon } from "lucide-react"
+import { ArrowLeftIcon, BookOpenIcon, LayoutDashboardIcon } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -9,22 +9,36 @@ import { cn } from "@/lib/utils"
 
 export type HeaderLink = { href: string; label: string }
 
-/** Sticky top bar shared by the dashboard and the guide. */
+/** Sticky top bar shared by the home page, the details page and the guide. */
 export function AppHeader({
   nav,
   current,
+  homeHref = "/",
 }: {
-  /** Section jump links shown under the bar (the dashboard passes them). */
+  /** Section jump links shown under the bar (the details page passes them). */
   nav?: HeaderLink[]
-  current: "dashboard" | "guide"
+  current: "home" | "details" | "guide"
+  /** Back to the simple view with the same filters (D30). */
+  homeHref?: string
 }) {
+  const home = current === "home"
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/90 backdrop-blur-sm">
-      <div className="mx-auto flex w-full max-w-7xl items-center gap-2 px-4 py-2.5">
+    <header
+      className={cn(
+        "sticky top-0 z-40 backdrop-blur-sm",
+        home ? "bg-canvas/90" : "border-b bg-background/90"
+      )}
+    >
+      <div
+        className={cn(
+          "mx-auto flex w-full items-center gap-2 px-4 py-2.5",
+          home ? "max-w-5xl" : "max-w-7xl"
+        )}
+      >
         <Link
           href="/"
           className="flex min-w-0 items-center gap-2 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-          aria-current={current === "dashboard" ? "page" : undefined}
+          aria-current={home ? "page" : undefined}
         >
           <Image
             src="/android-chrome-192x192.png"
@@ -42,18 +56,36 @@ export function AppHeader({
           </span>
         </Link>
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
-          <RefreshButton />
-          <Link
-            href={current === "guide" ? "/" : "/guide"}
-            className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-          >
-            {current === "guide" ? (
+          {current === "details" ? (
+            <Link
+              href={homeHref}
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+            >
+              <ArrowLeftIcon data-icon="inline-start" aria-hidden />
+              <span className="sr-only sm:not-sr-only">Simple view</span>
+            </Link>
+          ) : null}
+          {home ? null : <RefreshButton />}
+          {current === "guide" ? (
+            <Link
+              href="/"
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+            >
               <LayoutDashboardIcon data-icon="inline-start" aria-hidden />
-            ) : (
+              Dashboard
+            </Link>
+          ) : (
+            <Link
+              href="/guide"
+              className={cn(
+                buttonVariants({ variant: "outline", size: "sm" }),
+                home && "rounded-full"
+              )}
+            >
               <BookOpenIcon data-icon="inline-start" aria-hidden />
-            )}
-            {current === "guide" ? "Dashboard" : "Guide"}
-          </Link>
+              {home ? "How it works" : "Guide"}
+            </Link>
+          )}
           <ThemeToggle />
         </div>
       </div>

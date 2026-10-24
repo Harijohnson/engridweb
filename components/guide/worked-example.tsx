@@ -78,7 +78,7 @@ export function WorkedExample() {
         </li>
       </ol>
       <Link
-        href={`/?hour=${encodeURIComponent(WORKED_EXAMPLE_HOUR)}#publication-history`}
+        href={`/details?hour=${encodeURIComponent(WORKED_EXAMPLE_HOUR)}#publication-history`}
         className={cn(buttonVariants({ size: "sm" }), "self-start")}
       >
         Open this hour on the dashboard

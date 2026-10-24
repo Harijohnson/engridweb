@@ -33,6 +33,7 @@ import {
   DEFAULT_CHART_ZOOM,
   DEFAULT_PAGE_SIZE,
   PAGE_SIZES,
+  serializeDashboard,
   useAnalyticsParams,
   useDashboardParams,
 } from "@/hooks/use-dashboard-params"
@@ -117,7 +118,11 @@ export function Dashboard() {
 
   return (
     <>
-      <AppHeader current="dashboard" nav={SECTIONS} />
+      <AppHeader
+        current="details"
+        nav={SECTIONS}
+        homeHref={serializeDashboard("/", state)}
+      />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-4 py-4">
         <DashboardHeader meta={meta.data} />
         {meta.error && !meta.data ? (

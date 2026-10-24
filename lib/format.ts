@@ -144,6 +144,16 @@ export function formatUkTime(value: Instant): string {
   return timeFormat.format(toDate(value))
 }
 
+/** A wall-clock "HH:MM" as a plain clock time: "10am", "10:30am", "12pm", "12am". */
+export function formatClock12(clock: string): string {
+  const [hours, minutes] = clock.split(":").map(Number)
+  const suffix = hours < 12 ? "am" : "pm"
+  const hour12 = hours % 12 === 0 ? 12 : hours % 12
+  return minutes === 0
+    ? `${hour12}${suffix}`
+    : `${hour12}:${String(minutes).padStart(2, "0")}${suffix}`
+}
+
 /** "UK time (GMT)" or "UK time (BST)", whichever applies at the instant shown. Derived
  * from the UTC offset, because browsers disagree on short zone names ("GMT" vs "GMT+0"). */
 export function ukZoneLabel(value: Instant): string {
