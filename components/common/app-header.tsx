@@ -1,4 +1,5 @@
-import { BookOpenIcon, LayoutDashboardIcon, WindIcon } from "lucide-react"
+import { BookOpenIcon, LayoutDashboardIcon } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 
 import { RefreshButton } from "@/components/common/refresh-button"
@@ -25,9 +26,14 @@ export function AppHeader({
           className="flex min-w-0 items-center gap-2 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           aria-current={current === "dashboard" ? "page" : undefined}
         >
-          <span className="flex size-8 shrink-0 items-center justify-center bg-primary text-primary-foreground">
-            <WindIcon className="size-4.5" aria-hidden />
-          </span>
+          <Image
+            src="/android-chrome-192x192.png"
+            alt=""
+            width={32}
+            height={32}
+            priority
+            className="size-8 shrink-0"
+          />
           <span className="flex flex-col leading-tight">
             <span className="text-sm font-semibold tracking-tight">EnGrid</span>
             <span className="hidden text-[11px] text-muted-foreground sm:block">
