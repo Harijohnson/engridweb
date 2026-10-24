@@ -79,26 +79,30 @@ describe("Filters", () => {
     ).toBeTruthy()
   })
 
-  it("offers whole-month and weekly date presets from the API window", async () => {
+  it("keeps the days in one button that opens whole-month and weekly presets", async () => {
     renderWithProviders(<Dashboard />)
+    await userEvent.click(
+      await screen.findByRole("button", {
+        name: "Delivery days (UK): 1–31 Jan",
+      })
+    )
     const group = await screen.findByRole("group", {
-      name: /which delivery days/i,
+      name: /quick date ranges/i,
     })
     for (const label of ["Whole month", "1–7 Jan", "29–31 Jan"]) {
       expect(within(group).getByRole("button", { name: label })).toBeTruthy()
     }
   })
 
-  it("shows an active filter as a removable chip", async () => {
+  it("offers Reset only when a filter differs from the defaults", async () => {
     const urls: string[] = []
     renderWithProviders(<Dashboard />, {
       searchParams: "?policy=lead_time&lead=30",
       onUrlUpdate: (event) => urls.push(event.queryString),
     })
-    const remove = await screen.findAllByRole("button", {
-      name: "Remove filter: Buying 30 h ahead",
-    })
-    await userEvent.click(remove[0])
+    expect(await screen.findByText("30 h")).toBeTruthy()
+    const reset = await screen.findAllByRole("button", { name: "Reset" })
+    await userEvent.click(reset[0])
     await waitFor(() => expect(urls.at(-1)).not.toContain("lead="))
   })
 })

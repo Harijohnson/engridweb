@@ -38,7 +38,7 @@ describe("KpiCards: the four data states", () => {
     expect(onRetry).toHaveBeenCalledOnce()
   })
 
-  it("data: main score and coverage up front, other numbers on demand", async () => {
+  it("data: every number is a card, with the sign and direction on the bias", () => {
     renderWithProviders(
       <KpiCards
         summary={fixtures.summary}
@@ -47,16 +47,19 @@ describe("KpiCards: the four data states", () => {
         onRetry={() => {}}
       />
     )
-    expect(screen.getByText("744 / 744 hours matched")).toBeTruthy()
-    expect(screen.queryByText("+1,500")).toBeNull()
-    await userEvent.click(
-      screen.getByRole("button", { name: /show other numbers/i })
-    )
-    expect(screen.getByText("+1,500")).toBeTruthy()
-    expect(screen.getByText(/on average over-forecast/i)).toBeTruthy()
+    const cards = screen.getByLabelText(/accuracy numbers/i)
+    expect(within(cards).getByText("2,000")).toBeTruthy()
+    expect(within(cards).getByText("744 / 744 hours matched")).toBeTruthy()
+    expect(within(cards).getByText("+1,500")).toBeTruthy()
+    expect(within(cards).getByText(/on average over-forecast/i)).toBeTruthy()
+    // Depth without clutter: the spread of the error, not just its average.
+    expect(within(cards).getByText("4,000")).toBeTruthy()
+    expect(
+      within(cards).getByText(/half within 1,700 MW · worst 7,000 MW/i)
+    ).toBeTruthy()
   })
 
-  it("empty (n = 0): dashes and an explanation, never zeros", async () => {
+  it("empty (n = 0): dashes and an explanation, never zeros", () => {
     renderWithProviders(
       <KpiCards
         summary={{ ...fixtures.summary, metrics: fixtures.emptyMetrics }}
@@ -64,9 +67,6 @@ describe("KpiCards: the four data states", () => {
         error={null}
         onRetry={() => {}}
       />
-    )
-    await userEvent.click(
-      screen.getByRole("button", { name: /show other numbers/i })
     )
     expect(screen.getAllByText("–").length).toBeGreaterThanOrEqual(5)
     expect(screen.getAllByText(/no matched hours/i).length).toBeGreaterThan(0)

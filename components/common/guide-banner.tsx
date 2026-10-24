@@ -50,7 +50,7 @@ export function GuideBanner() {
   return (
     <aside
       aria-label="Getting started"
-      className="flex flex-col gap-3 border border-primary/40 bg-primary/5 p-3 sm:flex-row sm:items-center"
+      className="flex flex-col gap-2 rounded-2xl border border-primary/40 bg-primary/5 px-3.5 py-2 sm:flex-row sm:items-center"
     >
       <BookOpenIcon className="size-5 shrink-0 text-primary" aria-hidden />
       <p className="flex-1">

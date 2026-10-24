@@ -75,7 +75,7 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-2 border border-dashed px-4 py-10 text-center text-muted-foreground",
+        "flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed px-4 py-8 text-center text-muted-foreground",
         className
       )}
     >
@@ -169,17 +169,24 @@ export function ChartSkeleton({
   )
 }
 
-/** A placeholder the size of the headline score card. */
+/** Six placeholders the size of the key-number cards. */
 export function KpiSkeleton({ label }: { label: string }) {
   return (
     <div
-      className="flex h-52 flex-col gap-3 rounded-2xl bg-muted/40 p-6 sm:p-8"
+      className="grid grid-cols-2 gap-2.5 md:grid-cols-3 xl:grid-cols-6"
       role="status"
       aria-label={label}
     >
-      <Skeleton className="h-4 w-24" />
-      <Skeleton className="h-16 w-48" />
-      <Skeleton className="h-4 w-72 max-w-full" />
+      {Array.from({ length: 6 }, (_, i) => (
+        <div
+          key={i}
+          className="flex h-23 flex-col gap-2 rounded-2xl bg-card p-3.5 ring-1 ring-foreground/10"
+        >
+          <Skeleton className="h-3 w-20" />
+          <Skeleton className="h-6 w-24" />
+          <Skeleton className="h-3 w-full max-w-32" />
+        </div>
+      ))}
     </div>
   )
 }
@@ -195,7 +202,11 @@ export function TableSkeleton({
   label: string
 }) {
   return (
-    <div role="status" aria-label={label} className="flex flex-col border">
+    <div
+      role="status"
+      aria-label={label}
+      className="flex flex-col overflow-hidden rounded-xl border"
+    >
       {Array.from({ length: rows + 1 }, (_, r) => (
         <div
           key={r}

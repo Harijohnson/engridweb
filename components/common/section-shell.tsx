@@ -41,6 +41,7 @@ export function SectionShell({
   help,
   updating = false,
   source,
+  bare = false,
   className,
   children,
 }: {
@@ -52,10 +53,51 @@ export function SectionShell({
   /** Newer data is loading while the previous data is still shown. */
   updating?: boolean
   source?: SectionSource | null
+  /** No outer card: the children are cards themselves (the key numbers). */
+  bare?: boolean
   className?: string
   children: React.ReactNode
 }) {
   const titleId = `${id}-title`
+  if (bare) {
+    return (
+      <section
+        id={id}
+        aria-labelledby={titleId}
+        aria-busy={updating || undefined}
+        className={cn("flex min-w-0 scroll-mt-28 flex-col gap-2", className)}
+      >
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 px-1">
+          <h2
+            id={titleId}
+            className="flex items-center gap-1.5 text-sm font-medium"
+          >
+            {title}
+            {help ? <HelpTip title={title} help={help} /> : null}
+            {updating ? (
+              <span className="text-xs font-normal text-muted-foreground">
+                Updating…
+              </span>
+            ) : null}
+          </h2>
+          {description ? (
+            <p className="text-xs text-muted-foreground">{description}</p>
+          ) : null}
+        </div>
+        <div
+          className={cn("min-w-0 transition-opacity", updating && "opacity-60")}
+        >
+          {children}
+        </div>
+        {source ? (
+          <p className="px-1 text-[11px] text-muted-foreground">
+            Source: Elexon BMRS (WINDFOR, FUELHH) · data version{" "}
+            {source.dataVersion} · fetched {formatUkTime(source.fetchedAt)} UK
+          </p>
+        ) : null}
+      </section>
+    )
+  }
   return (
     <section
       id={id}
@@ -112,7 +154,7 @@ function HelpTip({ title, help }: { title: string; help: SectionHelp }) {
   return (
     <Popover>
       <PopoverTrigger
-        className="inline-flex size-5 items-center justify-center text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+        className="inline-flex size-5 items-center justify-center rounded-full text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         aria-label={`What is “${title}”?`}
       >
         <CircleHelpIcon className="size-4" aria-hidden />

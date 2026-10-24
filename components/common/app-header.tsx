@@ -61,7 +61,7 @@ export function AppHeader({
               <li key={link.href} className="shrink-0">
                 <a
                   href={link.href}
-                  className="inline-flex h-7 items-center px-2.5 text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                  className="inline-flex h-7 items-center rounded-full px-3 text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                 >
                   {link.label}
                 </a>

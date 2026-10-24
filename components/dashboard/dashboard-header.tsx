@@ -19,7 +19,7 @@ function latestIngestion(meta: Meta): string | null {
 }
 
 export function DataStatusBadge({ meta }: { meta: Meta | undefined }) {
-  if (!meta) return <Skeleton className="h-6 w-80 max-w-full" />
+  if (!meta) return <Skeleton className="h-5 w-72 max-w-full rounded-full" />
   const { forecast, actual } = meta.coverage
   const ingested = latestIngestion(meta)
   const complete = forecast.missing === 0 && actual.missing === 0
@@ -31,11 +31,15 @@ export function DataStatusBadge({ meta }: { meta: Meta | undefined }) {
         "h-auto flex-wrap py-1 whitespace-normal",
         !complete && "border-highlight bg-highlight text-highlight-foreground"
       )}
+      title={
+        ingested
+          ? `Loaded from Elexon BMRS on ${formatUkDateTimeWithYear(ingested)} UK`
+          : "Loaded from Elexon BMRS"
+      }
     >
       <Icon aria-hidden />
       <span>
-        {complete ? "Complete data" : "Some data missing"} · Elexon BMRS
-        {ingested ? ` · loaded ${formatUkDateTimeWithYear(ingested)} UK` : ""}
+        {complete ? "Complete data" : "Some data missing"}
         {` · ${formatNumber(forecast.present)}/${formatNumber(forecast.expected)} forecast hours`}
         {` · ${formatNumber(actual.present)}/${formatNumber(actual.expected)} actual half-hours`}
       </span>
@@ -45,17 +49,16 @@ export function DataStatusBadge({ meta }: { meta: Meta | undefined }) {
 
 export function DashboardHeader({ meta }: { meta: Meta | undefined }) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       <GuideBanner />
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-        <div className="flex flex-col gap-1.5">
-          <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">
+      <div className="flex flex-col gap-1.5 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-lg font-semibold tracking-tight sm:text-xl">
             Which wind forecast could you buy on, and how good was it?
           </h1>
-          <p className="max-w-2xl text-sm text-muted-foreground">
-            GB wind generation, January 2026. For every hour, we use the newest
-            forecast published before your buying time, never a later one, and
-            compare it with what was really generated.{" "}
+          <p className="text-xs text-muted-foreground">
+            GB wind, January 2026 · Elexon BMRS · newest forecast before your
+            buying time, never a later one.{" "}
             <Link
               href="/guide"
               className="font-medium text-primary underline-offset-4 hover:underline"

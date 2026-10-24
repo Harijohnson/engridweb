@@ -118,7 +118,7 @@ export function Dashboard() {
   return (
     <>
       <AppHeader current="dashboard" nav={SECTIONS} />
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 py-6">
+      <main className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-4 py-4">
         <DashboardHeader meta={meta.data} />
         {meta.error && !meta.data ? (
           <ErrorState error={meta.error} onRetry={() => void meta.refetch()} />
@@ -172,7 +172,7 @@ export function Dashboard() {
             setState({ chart: chart === "lines" ? null : chart })
           }
         />
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid gap-3 lg:grid-cols-2">
           <PublicationHistory
             hour={state.hour}
             data={history.data}
